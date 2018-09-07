@@ -1,0 +1,40 @@
+{
+  "name": "zombie-battleground-erc721cards",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "rm -rf build && bash scripts/test.sh",
+    "test:gas": "GAS_REPORTER=true npm test",
+    "compile": "truffle compile",
+    "lint": "solium --dir ./contracts",
+    "deploy:ganache": "rm -rf build && truffle deploy --reset --network ganache",
+    "deploy:rinkeby": "rm -rf build && truffle deploy --reset --network rinkeby",
+    "postinstall": "npm test"
+  },
+  "keywords": [
+    "blockchain"
+  ],
+  "author": {
+    "name": "Loom Network",
+    "url": "https://loomx.io"
+  },
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "bignumber.js": "^7.2.1",
+    "bn-chai": "^1.0.1",
+    "bn.js": "^4.11.8",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.2",
+    "eth-gas-reporter": "^0.1.10",
+    "ethereumjs-util": "^5.2.0",
+    "ganache-cli": "^6.1.8",
+    "openzeppelin-solidity": "^1.12.0",
+    "truffle": "^5.0.0-beta.0",
+    "truffle-hdwallet-provider": "https://github.com/loomnetwork/truffle-hdwallet-provider#web3-one",
+    "web3-utils": "1.0.0-beta.34"
+  },
+  "dependencies": {
+    "solium": "^1.1.8"
+  }
+}
