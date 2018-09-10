@@ -7,9 +7,9 @@
 
 - [ERC721x Receiver](tree/master/contracts/Interfaces/ERC721XReceiver.sol)
 
-- [ERC721x Reference Implementation] (blob/master/contracts/Core/ERC721XToken.sol)
+- [ERC721x Reference Implementation](blob/master/contracts/Core/ERC721XToken.sol)
 
-- [ERC721x Backwards Compatibility Layer] (https://github.com/loomnetwork/erc721x/blob/master/contracts/Core/ERC721XTokenNFT.sol)
+- [ERC721x Backwards Compatibility Layer(https://github.com/loomnetwork/erc721x/blob/master/contracts/Core/ERC721XTokenNFT.sol)
 
 ---
 
