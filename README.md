@@ -1,16 +1,17 @@
 # ERC721x — A Smarter Token for the Future of Crypto Collectibles  
-## ERC721x is an extension of ERC721 that adds support for multi-fungible tokens and batch transfers, while being fully backward-compatible.
+ERC721x is an extension of ERC721 that adds support for multi-fungible tokens and batch transfers, while being fully backward-compatible.
 
 **Quick Links:**
 
-- [ERC721x Interface](tree/master/contracts/Interfaces/ERC721X.sol)
+- [ERC721x Interface](contracts/Interfaces/ERC721X.sol)
 
-- [ERC721x Receiver](tree/master/contracts/Interfaces/ERC721XReceiver.sol)
+- [ERC721x Receiver](contracts/Interfaces/ERC721XReceiver.sol)
 
-- [ERC721x Reference Implementation](blob/master/contracts/Core/ERC721XToken.sol)
+- [ERC721x Reference Implementation](contracts/Core/ERC721XToken.sol)
 
-- [ERC721x Backwards Compatibility Layer](https://github.com/loomnetwork/erc721x/blob/master/contracts/Core/ERC721XTokenNFT.sol)
+- [ERC721x Backwards Compatibility Layer](contracts/Core/ERC721XTokenNFT.sol)
 
+- [Open source under BSD-3](LICENSE)
 ---
 
 **The ERC721x Interface:**
