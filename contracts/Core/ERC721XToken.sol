@@ -1,5 +1,7 @@
 pragma solidity ^0.4.24;
 
+import "./../Interfaces/ERC721X.sol";
+
 import "./../Interfaces/ERC721XReceiver.sol";
 import "./ERC721XTokenNFT.sol";
 
@@ -8,7 +10,7 @@ import "./../Libraries/ObjectsLib.sol";
 
 
 // Additional features over NFT token that is compatible with batch transfers
-contract ERC721XToken is ERC721XTokenNFT {
+contract ERC721XToken is ERC721X, ERC721XTokenNFT {
 
     using ObjectLib for ObjectLib.Operations;
     using AddressUtils for address;
