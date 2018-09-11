@@ -74,7 +74,7 @@ Compatibility with marketplaces, wallets, and existing infrastructure (e.g. Ethe
 |---|---|---|---|---|
 |  ERC721  |  NO | NO  | YES  | YES  |
 |  ERC20 |  YES | NO  |  NO |  YES |
-|  ERC115 |  YES |  YES | YES  | NO  |
+|  ERC1155 |  YES |  YES | YES  | NO  |
 |  ERC1178 | YES  | YES  |  NO | NO  |
 
 We are not the first ones to need something like this, and there have been a few brilliant proposals on github. But every single instance sacrifices compatibility with existing wallets and marketplaces by creating an entirely new specification. While we wholeheartedly support new breakthroughs, it seemed to us that the more pragmatic path — the one we can use NOW instead of months later — would be to extend ERC721 somehow, rather than abandoning it altogether.
