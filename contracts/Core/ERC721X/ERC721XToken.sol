@@ -1,12 +1,12 @@
 pragma solidity ^0.4.24;
 
-import "./../Interfaces/ERC721X.sol";
+import "./../../Interfaces/ERC721X.sol";
 
-import "./../Interfaces/ERC721XReceiver.sol";
+import "./../../Interfaces/ERC721XReceiver.sol";
 import "./ERC721XTokenNFT.sol";
 
 import "openzeppelin-solidity/contracts/AddressUtils.sol";
-import "./../Libraries/ObjectsLib.sol";
+import "./../../Libraries/ObjectsLib.sol";
 
 
 // Additional features over NFT token that is compatible with batch transfers

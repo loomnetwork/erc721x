@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Receiver.sol";
 import "openzeppelin-solidity/contracts/AddressUtils.sol";
 
-import "../Libraries/ObjectsLib.sol";
+import "../../Libraries/ObjectsLib.sol";
 
 
 // Packed NFT that has storage which is batch transfer compatible
