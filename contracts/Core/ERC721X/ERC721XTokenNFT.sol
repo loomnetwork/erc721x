@@ -172,15 +172,8 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
         require(isApprovedOrOwner(_from, ownerOf(_tokenId), _tokenId));
         require(_to != address(0), "Invalid to address");
 
-        (uint256 bin, uint256 index) = _tokenId.getTokenBinIndex();
-        packedTokenBalance[_from][bin] =
-            packedTokenBalance[_from][bin].updateTokenBalance(
-                index, 0, ObjectLib.Operations.REPLACE
-        );
-        packedTokenBalance[_to][bin] =
-            packedTokenBalance[_to][bin].updateTokenBalance(
-                index, 1, ObjectLib.Operations.REPLACE
-        );
+        _updateTokenBalance(_from, _tokenId, 0, ObjectLib.Operations.REPLACE);
+        _updateTokenBalance(_to, _tokenId, 1, ObjectLib.Operations.REPLACE);
 
         tokenOwner[_tokenId] = _to;
         emit Transfer(_from, _to, _tokenId);

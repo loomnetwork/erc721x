@@ -152,21 +152,6 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
         emit TransferToken(_from, _to, _tokenId, _amount);
     }
 
-    function _updateTokenBalance(
-        address _from,
-        uint256 _tokenId,
-        uint256 _amount,
-        ObjectLib.Operations op
-    )
-        internal
-    {
-        (uint256 bin, uint256 index) = _tokenId.getTokenBinIndex();
-        packedTokenBalance[_from][bin] =
-            packedTokenBalance[_from][bin].updateTokenBalance(
-                index, _amount, op
-        );
-    }
-
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, uint256 _amount) public {
         safeTransferFrom(_from, _to, _tokenId, _amount, "");
     }
