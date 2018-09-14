@@ -1,6 +1,7 @@
 {
   "name": "erc721x",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "description": "ERC721X Solidity contracts",
   "main": "index.js",
   "scripts": {
     "test": "rm -rf build && bash scripts/test.sh",
@@ -8,8 +9,7 @@
     "compile": "truffle compile",
     "lint": "solium --dir ./contracts",
     "deploy:ganache": "rm -rf build && truffle deploy --reset --network ganache",
-    "deploy:rinkeby": "rm -rf build && truffle deploy --reset --network rinkeby",
-    "postinstall": "npm test"
+    "deploy:rinkeby": "rm -rf build && truffle deploy --reset --network rinkeby"
   },
   "keywords": [
     "blockchain"

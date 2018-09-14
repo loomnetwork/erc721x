@@ -80,6 +80,24 @@ contract('Card', accounts => {
         supplyPostMint.should.be.eq.BN(supplyPostSecondMint)
     })
 
+    it('Should be impossible to mint NFT tokens with the same tokenId as an existing FT tokenId', async () => {
+        const uid = 0;
+        await card.mint(uid, alice, 5);
+        const supplyPostMint = await card.totalSupply()
+        await expectThrow(card.mint(uid, alice))
+        const supplyPostSecondMint = await card.totalSupply()
+        supplyPostMint.should.be.eq.BN(supplyPostSecondMint)
+    })
+
+    it('Should be impossible to mint FT tokens with the same tokenId as an existing NFT tokenId', async () => {
+        const uid = 0;
+        await card.mint(uid, alice);
+        const supplyPostMint = await card.totalSupply()
+        await expectThrow(card.mint(uid, alice, 5))
+        const supplyPostSecondMint = await card.totalSupply()
+        supplyPostMint.should.be.eq.BN(supplyPostSecondMint)
+    })
+
     it('Should be able to transfer a non fungible token', async () => {
         const uid = 0
         await card.mint(uid, alice)
