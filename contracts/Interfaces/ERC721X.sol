@@ -4,6 +4,7 @@ pragma solidity 0.4.24;
 contract ERC721X {
   function implementsERC721X() public pure returns (bool);
   function ownerOf(uint256 _tokenId) public view returns (address _owner);
+  function balanceOf(address owner) public view returns (uint256);
   function balanceOf(address owner, uint256 tokenId) public view returns (uint256);
   function tokensOwned(address owner) public view returns (uint256[], uint256[]);
 
