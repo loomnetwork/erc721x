@@ -152,21 +152,6 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
         emit TransferToken(_from, _to, _tokenId, _amount);
     }
 
-    function _updateTokenBalance(
-        address _from,
-        uint256 _tokenId,
-        uint256 _amount,
-        ObjectLib.Operations op
-    )
-        internal
-    {
-        (uint256 bin, uint256 index) = _tokenId.getTokenBinIndex();
-        packedTokenBalance[_from][bin] =
-            packedTokenBalance[_from][bin].updateTokenBalance(
-                index, _amount, op
-        );
-    }
-
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, uint256 _amount) public {
         safeTransferFrom(_from, _to, _tokenId, _amount, "");
     }
@@ -180,8 +165,19 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
     }
 
     function _mint(uint256 _tokenId, address _to, uint256 _supply) internal {
+        // If the token doesn't exist, add it to the tokens array
+        if (!exists(_tokenId)) {
+            // we use the contract's address as a flag for NFT/FT
+            tokenOwner[_tokenId] = address(this);
+            allTokens.push(_tokenId);
+        } else {
+            // if the token exists, it must be a FT
+            require(ownerOf(_tokenId) == address(this),
+                    "Minting a tokenId which has already been minted as a NFT"
+            );
+        }
+
         _updateTokenBalance(_to, _tokenId, _supply, ObjectLib.Operations.REPLACE);
-        allTokens.push(_tokenId);
         emit TransferToken(address(this), _to, _tokenId, _supply);
     }
 
