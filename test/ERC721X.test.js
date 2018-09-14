@@ -30,7 +30,15 @@ contract('Card', accounts => {
         symbol.should.be.equal('CRD')
     })
 
-    it('Should return correct token uri', async () => {
+    it('Should return correct token uri for FT', async () => {
+        const uid = 0
+        await card.mint(uid, accounts[0], 2)
+        const cardUri = await card.tokenURI.call(uid)
+        assert.equal(cardUri, "https://rinkeby.loom.games/erc721/zmb/000000.json")
+    })
+
+
+    it('Should return correct token uri for NFT', async () => {
         const uid = 0
         await card.mint(uid, accounts[0])
         const cardUri = await card.tokenURI.call(uid)
