@@ -78,7 +78,7 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
      * @return address the owner of the token
      */
     function ownerOf(uint256 _tokenId) public view returns (address) {
-        require(tokenOwner[_tokenId] != address(0), "Not an NFT");
+        require(tokenOwner[_tokenId] != address(0), "Coin does not exist");
         return tokenOwner[_tokenId];
     }
 
