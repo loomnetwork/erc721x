@@ -30,7 +30,15 @@ contract('Card', accounts => {
         symbol.should.be.equal('CRD')
     })
 
-    it('Should return correct token uri', async () => {
+    it('Should return correct token uri for FT', async () => {
+        const uid = 0
+        await card.mint(uid, accounts[0], 2)
+        const cardUri = await card.tokenURI.call(uid)
+        assert.equal(cardUri, "https://rinkeby.loom.games/erc721/zmb/000000.json")
+    })
+
+
+    it('Should return correct token uri for NFT', async () => {
         const uid = 0
         await card.mint(uid, accounts[0])
         const cardUri = await card.tokenURI.call(uid)
@@ -68,6 +76,24 @@ contract('Card', accounts => {
         await card.mint(uid, alice);
         const supplyPostMint = await card.totalSupply()
         await expectThrow(card.mint(uid, alice))
+        const supplyPostSecondMint = await card.totalSupply()
+        supplyPostMint.should.be.eq.BN(supplyPostSecondMint)
+    })
+
+    it('Should be impossible to mint NFT tokens with the same tokenId as an existing FT tokenId', async () => {
+        const uid = 0;
+        await card.mint(uid, alice, 5);
+        const supplyPostMint = await card.totalSupply()
+        await expectThrow(card.mint(uid, alice))
+        const supplyPostSecondMint = await card.totalSupply()
+        supplyPostMint.should.be.eq.BN(supplyPostSecondMint)
+    })
+
+    it('Should be impossible to mint FT tokens with the same tokenId as an existing NFT tokenId', async () => {
+        const uid = 0;
+        await card.mint(uid, alice);
+        const supplyPostMint = await card.totalSupply()
+        await expectThrow(card.mint(uid, alice, 5))
         const supplyPostSecondMint = await card.totalSupply()
         supplyPostMint.should.be.eq.BN(supplyPostSecondMint)
     })
