@@ -100,8 +100,8 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
         uint256 count;
         for (uint256 i = 0; i < numTokens; i++) {
             uint256 tokenId = allTokens[i];
-            if (balanceOf(_owner, tokenId) > 0) {
-                tempTokens[count] = balanceOf(_owner, tokenId);
+            if (balanceOfCoin(_owner, tokenId) > 0) {
+                tempTokens[count] = balanceOfCoin(_owner, tokenId);
                 tokenIndexes[count] = tokenId;
                 count++;
             }
@@ -135,7 +135,7 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
      * @param _tokenId type to query balance of
      * @return Amount of objects of a given type ID
      */
-    function balanceOf(address _address, uint256 _tokenId) public view returns (uint256) {
+    function balanceOfCoin(address _address, uint256 _tokenId) public view returns (uint256) {
         (uint256 bin, uint256 index) = _tokenId.getTokenBinIndex();
         return packedTokenBalance[_address][bin].getValueInBin(index);
     }
