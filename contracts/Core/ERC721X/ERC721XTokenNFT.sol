@@ -24,6 +24,10 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
     mapping(uint256 => address) internal tokenOwner;
     mapping(address => mapping(address => bool)) operators;
     mapping (uint256 => address) internal tokenApprovals;
+    mapping(uint256 => uint256) tokenType;
+
+    uint256 constant NFT = 1;
+    uint256 constant FT = 2;
 
 
     constructor() public {
@@ -45,8 +49,7 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
      * @return whether the token exists
      */
     function exists(uint256 _tokenId) public view returns (bool) {
-        address owner = tokenOwner[_tokenId];
-        return owner != address(0);
+        return tokenType[_tokenId] != 0;
     }
 
     function implementsERC721() public pure returns (bool) {
@@ -252,6 +255,7 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
         require(!exists(_tokenId), "Error: Tried to mint duplicate token id");
         _updateTokenBalance(_to, _tokenId, 1, ObjectLib.Operations.REPLACE);
         tokenOwner[_tokenId] = _to;
+        tokenType[_tokenId] = NFT;
         allTokens.push(_tokenId);
         emit Transfer(address(this), _to, _tokenId);
     }
