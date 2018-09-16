@@ -48,6 +48,10 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
         require(_tokenIds.length == _amounts.length, "Inconsistent array length between args");
         require(_to != address(0), "Invalid recipient");
 
+        if (tokenType[_tokenIds[0]] == NFT) {
+            tokenOwner[_tokenIds[0]] = _to;
+        }
+
         // Load first bin and index where the object balance exists
         (uint256 bin, uint256 index) = ObjectLib.getTokenBinIndex(_tokenIds[0]);
 
@@ -67,6 +71,10 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
         uint256 lastBin = bin;
 
         for (uint256 i = 1; i < nTransfer; i++) {
+            // If we're transferring an NFT we additionally should update the tokenOwner
+            if (tokenType[_tokenIds[i]] == NFT) {
+                tokenOwner[_tokenIds[i]] = _to;
+            }
             (bin, index) = _tokenIds[i].getTokenBinIndex();
 
             // If new bin
