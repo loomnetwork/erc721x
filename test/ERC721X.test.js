@@ -98,6 +98,15 @@ contract('Card', accounts => {
         supplyPostMint.should.be.eq.BN(supplyPostSecondMint)
     })
 
+    it('Should be impossible to mint NFT tokens more than once even when owner is the contract itself', async () => {
+        const uid = 0;
+        await card.mint(uid, card.address);
+        const supplyPostMint = await card.totalSupply()
+        await expectThrow(card.mint(uid, card.address, 3))
+        const supplyPostSecondMint = await card.totalSupply()
+        supplyPostMint.should.be.eq.BN(supplyPostSecondMint)
+    })
+
     it('Should be able to transfer a non fungible token', async () => {
         const uid = 0
         await card.mint(uid, alice)
