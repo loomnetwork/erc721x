@@ -98,6 +98,15 @@ contract('Card', accounts => {
         supplyPostMint.should.be.eq.BN(supplyPostSecondMint)
     })
 
+    it('Should be impossible to mint NFT tokens more than once even when owner is the contract itself', async () => {
+        const uid = 0;
+        await card.mint(uid, card.address);
+        const supplyPostMint = await card.totalSupply()
+        await expectThrow(card.mint(uid, card.address, 3))
+        const supplyPostSecondMint = await card.totalSupply()
+        supplyPostMint.should.be.eq.BN(supplyPostSecondMint)
+    })
+
     it('Should be able to transfer a non fungible token', async () => {
         const uid = 0
         await card.mint(uid, alice)
@@ -183,6 +192,40 @@ contract('Card', accounts => {
     it('Should fail to mint quantity of coins larger than packed bin can represent', async () => {
         // each bin can only store numbers < 2^16
         await expectThrow(card.mint(alice, 0, 150000));
+    })
+
+    it('Should update balances of sender and receiver and ownerOf for NFTs', async () => {
+        //       bins :   -- 0 --  ---- 1 ----  ---- 2 ----  ---- 3 ----
+        let cards  = []; //[0,1,2,3, 16,17,18,19, 32,33,34,35, 48,49,50,51];
+        let copies = []; //[0,1,2,3, 12,13,14,15, 11,12,13,14, 11,12,13,14];
+
+        let nCards = 100;
+
+        //Minting enough copies for transfer for each cards
+        for (let i = 300; i < nCards + 300; i++){
+            await card.mint(i, alice);
+            cards.push(i);
+            copies.push(1);
+        }
+
+        const tx = await card.batchTransferFrom(alice, bob, cards, copies, {from: alice});
+
+        let balanceFrom;
+        let balanceTo;
+        let ownerOf;
+
+        for (let i = 0; i < cards.length; i++){
+            balanceFrom = await card.balanceOf(alice, cards[i]);
+            balanceTo   = await card.balanceOf(bob, cards[i]);
+            ownerOf = await card.ownerOf(cards[i]);
+
+            balanceFrom.should.be.eq.BN(0);
+            balanceTo.should.be.eq.BN(1);
+            assert.equal(ownerOf, bob);
+        }
+
+        assertEventVar(tx, 'BatchTransfer', 'from', alice)
+        assertEventVar(tx, 'BatchTransfer', 'to', bob)
     })
 
     it('Should update balances of sender and receiver', async () => {

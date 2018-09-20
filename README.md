@@ -50,14 +50,20 @@ contract ERC721X {
 
 **Quick Start:**
 
-Make sure you have ganache running
+```bash
+
+yarn add erc721x
+
+```
+
 
 ```bash
 
-yarn install
-truffle test
+npm install erc721x
 
 ```
+
+To run the tests in this repo, simply clone it and run `truffle test`
 
 ----
 

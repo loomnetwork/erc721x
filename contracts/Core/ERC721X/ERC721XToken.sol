@@ -48,6 +48,10 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
         require(_tokenIds.length == _amounts.length, "Inconsistent array length between args");
         require(_to != address(0), "Invalid recipient");
 
+        if (tokenType[_tokenIds[0]] == NFT) {
+            tokenOwner[_tokenIds[0]] = _to;
+        }
+
         // Load first bin and index where the object balance exists
         (uint256 bin, uint256 index) = ObjectLib.getTokenBinIndex(_tokenIds[0]);
 
@@ -67,6 +71,10 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
         uint256 lastBin = bin;
 
         for (uint256 i = 1; i < nTransfer; i++) {
+            // If we're transferring an NFT we additionally should update the tokenOwner
+            if (tokenType[_tokenIds[i]] == NFT) {
+                tokenOwner[_tokenIds[i]] = _to;
+            }
             (bin, index) = _tokenIds[i].getTokenBinIndex();
 
             // If new bin
@@ -167,14 +175,11 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
     function _mint(uint256 _tokenId, address _to, uint256 _supply) internal {
         // If the token doesn't exist, add it to the tokens array
         if (!exists(_tokenId)) {
-            // we use the contract's address as a flag for NFT/FT
-            tokenOwner[_tokenId] = address(this);
+            tokenType[_tokenId] = FT;
             allTokens.push(_tokenId);
         } else {
             // if the token exists, it must be a FT
-            require(ownerOf(_tokenId) == address(this),
-                    "Minting a tokenId which has already been minted as a NFT"
-            );
+            require(tokenType[_tokenId] == FT, "Not a FT");
         }
 
         _updateTokenBalance(_to, _tokenId, _supply, ObjectLib.Operations.REPLACE);
