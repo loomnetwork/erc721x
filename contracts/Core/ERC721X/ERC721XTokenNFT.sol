@@ -188,6 +188,7 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
         tokenUri = "https://rinkeby.loom.games/erc721/zmb/000000.json";
 
         bytes memory _uriBytes = bytes(tokenUri);
+        _uriBytes[38] = byte(48+(_tokenId / 100000) % 10);
         _uriBytes[39] = byte(48+(_tokenId / 10000) % 10);
         _uriBytes[40] = byte(48+(_tokenId / 1000) % 10);
         _uriBytes[41] = byte(48+(_tokenId / 100) % 10);

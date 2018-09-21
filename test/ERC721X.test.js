@@ -12,6 +12,12 @@ require('chai')
 
 const Card = artifacts.require('Card')
 
+Number.prototype.pad = function(size) {
+    var s = String(this);
+    while (s.length < (size || 2)) {s = "0" + s;}
+    return s;
+}
+
 contract('Card', accounts => {
     let card
     const  [ alice, bob, carlos ] = accounts;
@@ -30,19 +36,27 @@ contract('Card', accounts => {
         symbol.should.be.equal('CRD')
     })
 
-    it('Should return correct token uri for FT', async () => {
-        const uid = 0
-        await card.mint(uid, accounts[0], 2)
-        const cardUri = await card.tokenURI.call(uid)
-        assert.equal(cardUri, "https://rinkeby.loom.games/erc721/zmb/000000.json")
+    it('Should return correct token uri for multiple FT', async () => {
+        for (let i = 0; i< 100; i++) {
+            await card.mint(i, accounts[0], 2)
+            const cardUri = await card.tokenURI.call(i)
+            assert.equal(cardUri, `https://rinkeby.loom.games/erc721/zmb/${i.pad(6)}.json`)
+        }
     })
 
+    it('Should return correct token uri for multiple NFT', async () => {
+        for (let i = 0; i< 100; i++) {
+            await card.mint(i, accounts[0])
+            const cardUri = await card.tokenURI.call(i)
+            assert.equal(cardUri, `https://rinkeby.loom.games/erc721/zmb/${i.pad(6)}.json`)
+        }
+    })
 
-    it('Should return correct token uri for NFT', async () => {
-        const uid = 0
+    it('Should return correct token uri for 6-digit NFT', async () => {
+        const uid = 987145
         await card.mint(uid, accounts[0])
         const cardUri = await card.tokenURI.call(uid)
-        assert.equal(cardUri, "https://rinkeby.loom.games/erc721/zmb/000000.json")
+        assert.equal(cardUri, "https://rinkeby.loom.games/erc721/zmb/987145.json")
     })
 
     it('Should be able to mint a fungible token', async () => {
