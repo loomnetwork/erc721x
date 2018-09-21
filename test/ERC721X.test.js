@@ -107,16 +107,16 @@ contract('Card', accounts => {
         supplyPostMint.should.be.eq.BN(supplyPostSecondMint)
     })
 
-    it.only('a FT token should not have an owner', async () => {
+    it('a FT token should not have an owner', async () => {
         const uid = 0;
         await card.mint(uid, alice, 10);
         await expectThrow(card.ownerOf(uid));
     })
 
-    it.only('Should be impossible for a FT token to have an owner even after a transfer', async () => {
+    it('Should be impossible for a FT token to be transferred with NFT transfer', async () => {
         const uid = 0;
         await card.mint(uid, alice, 10);
-        await card.transferFrom(alice, bob, uid);
+        await expectThrow(card.transferFrom(alice, bob, uid));
         await expectThrow(card.ownerOf(uid));
     })
 

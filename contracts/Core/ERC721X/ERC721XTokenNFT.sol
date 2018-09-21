@@ -172,6 +172,7 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
     function _transferFrom(address _from, address _to, uint256 _tokenId)
         internal
     {
+        require(tokenType[_tokenId] == NFT);
         require(isApprovedOrOwner(_from, ownerOf(_tokenId), _tokenId));
         require(_to != address(0), "Invalid to address");
 
