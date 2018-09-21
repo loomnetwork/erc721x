@@ -18,17 +18,17 @@ ERC721x is an extension of ERC721 that adds support for multi-fungible tokens an
 
 ```sol
 contract ERC721X {
-  function implementsERC721X() external pure returns (bool);
-  function individualSupply(uint256 tokenId) external view returns (uint256);
-  function ownerOf(uint256 _tokenId) external view returns (address _owner);
-  function balanceOf(address owner, uint256 tokenId) external view returns (uint256);
-  function tokensOwned(address owner) external view returns (uint256[]);
+  function implementsERC721X() public pure returns (bool);
+  function ownerOf(uint256 _tokenId) public view returns (address _owner);
+  function balanceOf(address owner) public view returns (uint256);
+  function balanceOf(address owner, uint256 tokenId) public view returns (uint256);
+  function tokensOwned(address owner) public view returns (uint256[], uint256[]);
 
-  function transfer(address to, uint256 tokenId, uint256 quantity) external;
-  function transferFrom(address from, address to, uint256 tokenId, uint256 quantity) external;
+  function transfer(address to, uint256 tokenId, uint256 quantity) public;
+  function transferFrom(address from, address to, uint256 tokenId, uint256 quantity) public;
 
   // Fungible Safe Transfer From
-  function safeTransferFrom(address from, address to, uint256 tokenId, uint256 _amount) external;
+  function safeTransferFrom(address from, address to, uint256 tokenId, uint256 _amount) public;
   function safeTransferFrom(address from, address to, uint256 tokenId, uint256 _amount, bytes data) public;
 
   // Batch Safe Transfer From
@@ -36,7 +36,6 @@ contract ERC721X {
 
   function name() external view returns (string);
   function symbol() external view returns (string);
-  function tokenName(uint256 tokenId) external view returns (string);
 
   // Required Events
   event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
