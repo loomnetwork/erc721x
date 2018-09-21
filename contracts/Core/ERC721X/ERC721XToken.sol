@@ -49,6 +49,7 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
 
         if (tokenType[_tokenIds[0]] == NFT) {
             tokenOwner[_tokenIds[0]] = _to;
+            emit Transfer(_from, _to, _tokenIds[0]);
         }
 
         // Load first bin and index where the object balance exists
@@ -70,9 +71,10 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
         uint256 lastBin = bin;
 
         for (uint256 i = 1; i < nTransfer; i++) {
-            // If we're transferring an NFT we additionally should update the tokenOwner
+            // If we're transferring an NFT we additionally should update the tokenOwner and emit the corresponding event
             if (tokenType[_tokenIds[i]] == NFT) {
                 tokenOwner[_tokenIds[i]] = _to;
+                emit Transfer(_from, _to, _tokenIds[i]);
             }
             (bin, index) = _tokenIds[i].getTokenBinIndex();
 
