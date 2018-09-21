@@ -19,7 +19,6 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
     bytes4 internal constant ERC721X_BATCH_RECEIVE_SIG = 0xe9e5be6a;
 
     event BatchTransfer(address from, address to, uint256[] tokenTypes, uint256[] amounts);
-    event TransferToken(address indexed from, address indexed to, uint256 indexed tokenId, uint256 quantity);
 
 
     modifier isOperatorOrOwner(address _from) {
@@ -158,7 +157,7 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
 
         _updateTokenBalance(_from, _tokenId, _amount, ObjectLib.Operations.SUB);
         _updateTokenBalance(_to, _tokenId, _amount, ObjectLib.Operations.ADD);
-        emit TransferToken(_from, _to, _tokenId, _amount);
+        emit TransferWithQuantity(_from, _to, _tokenId, _amount);
     }
 
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, uint256 _amount) public {
@@ -184,7 +183,7 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
         }
 
         _updateTokenBalance(_to, _tokenId, _supply, ObjectLib.Operations.REPLACE);
-        emit TransferToken(address(this), _to, _tokenId, _supply);
+        emit TransferWithQuantity(address(this), _to, _tokenId, _supply);
     }
 
 

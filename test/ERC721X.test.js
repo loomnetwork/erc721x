@@ -161,10 +161,10 @@ contract('Card', accounts => {
 
         const tx = await card.safeTransferFrom(alice, bob, uid, amount, "0xabcd", {from: alice})
 
-        assertEventVar(tx, 'TransferToken', 'from', alice)
-        assertEventVar(tx, 'TransferToken', 'to', bob)
-        assertEventVar(tx, 'TransferToken', 'tokenId', uid)
-        assertEventVar(tx, 'TransferToken', 'quantity', amount)
+        assertEventVar(tx, 'TransferWithQuantity', 'from', alice)
+        assertEventVar(tx, 'TransferWithQuantity', 'to', bob)
+        assertEventVar(tx, 'TransferWithQuantity', 'tokenId', uid)
+        assertEventVar(tx, 'TransferWithQuantity', 'quantity', amount)
 
         const aliceCardsAfter = await card.balanceOf(alice)
         assert.equal(aliceCardsAfter, 0)
@@ -184,10 +184,10 @@ contract('Card', accounts => {
 
         tx = await card.safeTransferFrom(alice, bob, uid, amount, "0xabcd", {from: bob})
 
-        assertEventVar(tx, 'TransferToken', 'from', alice)
-        assertEventVar(tx, 'TransferToken', 'to', bob)
-        assertEventVar(tx, 'TransferToken', 'tokenId', uid)
-        assertEventVar(tx, 'TransferToken', 'quantity', amount)
+        assertEventVar(tx, 'TransferWithQuantity', 'from', alice)
+        assertEventVar(tx, 'TransferWithQuantity', 'to', bob)
+        assertEventVar(tx, 'TransferWithQuantity', 'tokenId', uid)
+        assertEventVar(tx, 'TransferWithQuantity', 'quantity', amount)
     })
 
     it('Should Carlos not be authorized to spend', async () => {

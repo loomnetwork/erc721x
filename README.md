@@ -38,10 +38,10 @@ contract ERC721X {
   function symbol() external view returns (string);
 
   // Required Events
-  event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+  event TransferWithQuantity(address indexed from, address indexed to, uint256 indexed tokenId);
   event TransferToken(address indexed from, address indexed to, uint256 indexed tokenId, uint256 quantity);
   event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
-  event BatchTransfer(address from, address to, uint256[] tokenTypes, uint256[] amounts);
+  event BatchTransfer(address indexed from, address indexed to, uint256[] tokenTypes, uint256[] amounts);
 }
 ```
 
