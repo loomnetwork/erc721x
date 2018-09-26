@@ -228,6 +228,43 @@ contract('Card', accounts => {
         await expectThrow(card.safeTransferFrom(alice, bob, uid, amount, "0xabcd", {from: carlos}))
     })
 
+    it('Should get the correct number of coins owned by a user', async () => {
+        let numTokens = await card.totalSupply();
+        let balanceOf = await card.balanceOf(alice);
+        balanceOf.should.be.eq.BN(new BN(0));
+
+        await card.mint(1000, alice, 100);
+        let numTokens1 = await card.totalSupply();
+
+        numTokens1.should.be.eq.BN(numTokens.add(new BN(1)));
+
+        await card.mint(11, bob, 5);
+        let numTokens2 = await card.totalSupply();
+        numTokens2.should.be.eq.BN(numTokens1.add(new BN(1)));
+
+        await card.mint(12, alice, 2);
+        let numTokens3 = await card.totalSupply();
+        numTokens3.should.be.eq.BN(numTokens2.add(new BN(1)));
+
+        await card.mint(13, alice);
+        let numTokens4 = await card.totalSupply();
+        numTokens4.should.be.eq.BN(numTokens3.add(new BN(1)));
+        balanceOf = await card.balanceOf(alice);
+        balanceOf.should.be.eq.BN(new BN(3));
+
+        const tokensOwned = await card.tokensOwned(alice);
+        const indexes = tokensOwned[0];
+        const balances = tokensOwned[1];
+
+        indexes[0].should.be.eq.BN(new BN(1000));
+        indexes[1].should.be.eq.BN(new BN(12));
+        indexes[2].should.be.eq.BN(new BN(13));
+
+        balances[0].should.be.eq.BN(new BN(100));
+        balances[1].should.be.eq.BN(new BN(2));
+        balances[2].should.be.eq.BN(new BN(1));
+    });
+
     it('Should fail to mint quantity of coins larger than packed bin can represent', async () => {
         // each bin can only store numbers < 2^16
         await expectThrow(card.mint(alice, 0, 150000));
