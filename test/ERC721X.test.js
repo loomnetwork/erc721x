@@ -36,6 +36,18 @@ contract('Card', accounts => {
         symbol.should.be.equal('CRD')
     })
 
+    it('Should get the correct supply when minting both NFTs and FTs', async () => {
+        // Supply is the total amount of UNIQUE cards.
+        for (let i = 0; i < 10; i+=2) {
+            await card.mint(i, accounts[0], 2)
+            await card.mint(i+1, accounts[0])
+        }
+        const supply = await card.totalSupply.call()
+        assert.equal(supply, 10)
+
+    })
+
+
     it('Should return correct token uri for multiple FT', async () => {
         for (let i = 0; i< 100; i++) {
             await card.mint(i, accounts[0], 2)
