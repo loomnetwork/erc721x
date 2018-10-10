@@ -7,9 +7,9 @@ ERC721x is an extension of ERC721 that adds support for multi-fungible tokens an
 
 - [ERC721x Receiver](contracts/Interfaces/ERC721XReceiver.sol)
 
-- [ERC721x Reference Implementation](contracts/Core/ERC721XToken.sol)
+- [ERC721x Reference Implementation](contracts/Core/ERC721X/ERC721XToken.sol)
 
-- [ERC721x Backwards Compatibility Layer](contracts/Core/ERC721XTokenNFT.sol)
+- [ERC721x Backwards Compatibility Layer](contracts/Core/ERC721X/ERC721XTokenNFT.sol)
 
 - [Open source under BSD-3](LICENSE)
 ---
