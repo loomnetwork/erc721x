@@ -38,7 +38,7 @@ contract ERC721X {
   function symbol() external view returns (string);
 
   // Required Events
-  event TransferWithQuantity(address indexed from, address indexed to, uint256 indexed tokenId);
+  event TransferWithQuantity(address indexed from, address indexed to, uint256 indexed tokenId, uint256 quantity);
   event TransferToken(address indexed from, address indexed to, uint256 indexed tokenId, uint256 quantity);
   event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
   event BatchTransfer(address indexed from, address indexed to, uint256[] tokenTypes, uint256[] amounts);
@@ -67,11 +67,11 @@ To run the tests in this repo, simply clone it and run `truffle test`
 ----
 
 ### Background
-Here at Loom Network, we’ve been working on Zombie Battleground, a 100% on-chain collectible card game that’s targeted at the mainstream audience. Recently, we finished a Kickstarter campaign, and as part of the early backer packages, we will be delivering almost 2 million cards to these backers. We started with a normal ERC721 smart contract, but quickly realized that we needed some adjustments to make it mainstream-friendly. Here are the criteria we’re working with: 
+Here at Loom Network, we’ve been working on Zombie Battleground, a 100% on-chain collectible card game that’s targeted at the mainstream audience. Recently, we finished a Kickstarter campaign, and as part of the early backer packages, we will be delivering almost 2 million cards to these backers. We started with a normal ERC721 smart contract, but quickly realized that we needed some adjustments to make it mainstream-friendly. Here are the criteria we’re working with:
 
 Transfers should cost very little gas, even if the player is transferring a large quantity of items. For example, someone might want to transfer a few hundred very cheap cards that are worth little individually, but quite valuable in bulk.
-One contract should contain multiple “classes” of items. For example, under the broad category of Zombie Battleground cards, we want to have 100 different kinds of cards, each having many copies. 
-Compatibility with marketplaces, wallets, and existing infrastructure (e.g. Etherscan). Wallet and marketplace makers provide a valuable service to the community, and it makes sense to leverage their existing work. 
+One contract should contain multiple “classes” of items. For example, under the broad category of Zombie Battleground cards, we want to have 100 different kinds of cards, each having many copies.
+Compatibility with marketplaces, wallets, and existing infrastructure (e.g. Etherscan). Wallet and marketplace makers provide a valuable service to the community, and it makes sense to leverage their existing work.
 
 ### The Current Landscape
 
@@ -85,16 +85,16 @@ Compatibility with marketplaces, wallets, and existing infrastructure (e.g. Ethe
 We are not the first ones to need something like this, and there have been a few brilliant proposals on github. But every single instance sacrifices compatibility with existing wallets and marketplaces by creating an entirely new specification. While we wholeheartedly support new breakthroughs, it seemed to us that the more pragmatic path — the one we can use NOW instead of months later — would be to extend ERC721 somehow, rather than abandoning it altogether.
 
 Our Approach: Extending ERC721 with ERC1178
-Out of all the existing solutions to this problem, the one that best suited our needs was ERC1178 (https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1178.md). 
+Out of all the existing solutions to this problem, the one that best suited our needs was ERC1178 (https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1178.md).
 
 It is extremely easy to read and understand because of its similarity to ERC20 — easy enough that any curious user can audit the smart contract and see what the developer put in it. (If they need a little help, doing a lesson on CryptoZombies.io should be enough 😉)
 It has very little bloat — just the bare minimum to implement the necessary features. The fewer things added, the better the chances are that it’s secure, because it deviates less from battle-tested code.
-It’s really useful for things beyond just games — for example, creating a token that can represent preferred, common, or restricted shares of a company. 
+It’s really useful for things beyond just games — for example, creating a token that can represent preferred, common, or restricted shares of a company.
 
 ![image copied on 2018-09-07 at 19 14 21 pm](https://user-images.githubusercontent.com/1289797/45216191-45e03d00-b2d2-11e8-8fa8-88bc761a3584.png)
 
 
-Using ERC1178 as the base, we added a very thin optional layer of features to support crypto-collectibles, then wrapped everything with an ERC721 compatibility layer. 
+Using ERC1178 as the base, we added a very thin optional layer of features to support crypto-collectibles, then wrapped everything with an ERC721 compatibility layer.
 
 ### Real World Usage
 
@@ -104,8 +104,8 @@ Then, on a service that supports the enhanced features, such as cheap batch tran
 
 ### Conclusion
 
-Beyond the technical bits that make up blockchains, the spirit of blockchain tech is equally (if not more) important. Services should be interoperable, open, and compatible. It doesn’t matter if you add a million features when the end user has no wallet that can open them and no service like Etherscan that can view them. 
+Beyond the technical bits that make up blockchains, the spirit of blockchain tech is equally (if not more) important. Services should be interoperable, open, and compatible. It doesn’t matter if you add a million features when the end user has no wallet that can open them and no service like Etherscan that can view them.
 
-At the same time, any improvements made to a technology should aim to be as seamless as possible. We can see a wonderful example of this with our USB devices. There’s absolutely no need for us to stop and think, “Is this USB 1.0, 2.0, or 3.0?” We are spared from this mental overhead because, even if not all the new features are supported, we will still be able to use the device the exact same way. 
+At the same time, any improvements made to a technology should aim to be as seamless as possible. We can see a wonderful example of this with our USB devices. There’s absolutely no need for us to stop and think, “Is this USB 1.0, 2.0, or 3.0?” We are spared from this mental overhead because, even if not all the new features are supported, we will still be able to use the device the exact same way.
 
 It’s these two principles that led us to create the new ERC721x, specifically for crypto-collectibles — and it’s completely open source.
