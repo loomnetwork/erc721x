@@ -81,6 +81,13 @@ contract('Card', accounts => {
 
         const balanceOf2 = await card.balanceOf.call(accounts[0])
         balanceOf2.should.be.eq.BN(new BN(1))
+
+        await card.mint(uid, accounts[0], amount)
+        const newBalanceOf1 = await card.balanceOf.call(accounts[0], uid)
+        newBalanceOf1.should.be.eq.BN(new BN(10))
+
+        const newBalanceOf2 = await card.balanceOf.call(accounts[0])
+        newBalanceOf2.should.be.eq.BN(balanceOf2)
     })
 
     it('Should be able to mint a non-fungible token', async () => {

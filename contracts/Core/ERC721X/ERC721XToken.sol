@@ -184,7 +184,7 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
             require(tokenType[_tokenId] == FT, "Not a FT");
         }
 
-        _updateTokenBalance(_to, _tokenId, _supply, ObjectLib.Operations.REPLACE);
+        _updateTokenBalance(_to, _tokenId, _supply, ObjectLib.Operations.ADD);
         emit TransferWithQuantity(address(this), _to, _tokenId, _supply);
     }
 
