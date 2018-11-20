@@ -175,15 +175,9 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
     }
 
     function _mint(uint256 _tokenId, address _to, uint256 _supply) internal {
-        // If the token doesn't exist, add it to the tokens array
-        if (!exists(_tokenId)) {
-            tokenType[_tokenId] = FT;
-            allTokens.push(_tokenId);
-        } else {
-            // if the token exists, it must be a FT
-            require(tokenType[_tokenId] == FT, "Not a FT");
-        }
-
+        require(!exists(_tokenId), "Error: Tried to mint duplicate token id");
+        tokenType[_tokenId] = FT;
+        allTokens.push(_tokenId);
         _updateTokenBalance(_to, _tokenId, _supply, ObjectLib.Operations.ADD);
         emit TransferWithQuantity(address(this), _to, _tokenId, _supply);
     }
