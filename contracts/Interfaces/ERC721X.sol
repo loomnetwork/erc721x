@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.6;
 
 
 contract ERC721X {
@@ -6,20 +6,20 @@ contract ERC721X {
   function ownerOf(uint256 _tokenId) public view returns (address _owner);
   function balanceOf(address owner) public view returns (uint256);
   function balanceOf(address owner, uint256 tokenId) public view returns (uint256);
-  function tokensOwned(address owner) public view returns (uint256[], uint256[]);
+  function tokensOwned(address owner) public view returns (uint256[] memory, uint256[] memory);
 
   function transfer(address to, uint256 tokenId, uint256 quantity) public;
   function transferFrom(address from, address to, uint256 tokenId, uint256 quantity) public;
 
   // Fungible Safe Transfer From
   function safeTransferFrom(address from, address to, uint256 tokenId, uint256 _amount) public;
-  function safeTransferFrom(address from, address to, uint256 tokenId, uint256 _amount, bytes data) public;
+  function safeTransferFrom(address from, address to, uint256 tokenId, uint256 _amount, bytes memory data) public;
 
   // Batch Safe Transfer From
-  function safeBatchTransferFrom(address _from, address _to, uint256[] tokenIds, uint256[] _amounts, bytes _data) public;
+  function safeBatchTransferFrom(address _from, address _to, uint256[] memory tokenIds, uint256[] memory _amounts, bytes memory _data) public;
 
-  function name() external view returns (string);
-  function symbol() external view returns (string);
+  function name() external view returns (string memory);
+  function symbol() external view returns (string memory);
 
   // Required Events
   event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);

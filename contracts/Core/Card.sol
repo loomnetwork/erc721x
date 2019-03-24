@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.6;
 
 import "./ERC721X/ERC721XToken.sol";
 
@@ -6,11 +6,11 @@ import "./ERC721X/ERC721XToken.sol";
 
 contract Card is ERC721XToken {
 
-    function name() external view returns (string) {
+    function name() external view returns (string memory) {
         return "Card";
     }
 
-    function symbol() external view returns (string) {
+    function symbol() external view returns (string memory) {
         return "CRD";
     }
 

@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.6;
 
 
 /**
@@ -15,7 +15,7 @@ contract ERC721XReceiver {
   bytes4 constant ERC721X_RECEIVED = 0x660b3370;
   bytes4 constant ERC721X_BATCH_RECEIVE_SIG = 0xe9e5be6a;
 
-  function onERC721XReceived(address _operator, address _from, uint256 tokenId, uint256 amount, bytes data) public returns(bytes4);
+  function onERC721XReceived(address _operator, address _from, uint256 tokenId, uint256 amount, bytes memory data) public returns(bytes4);
 
   /**
    * @dev Handle the receipt of multiple fungible tokens from an MFT contract. The ERC721X smart contract calls
@@ -33,9 +33,9 @@ contract ERC721XReceiver {
   function onERC721XBatchReceived(
           address _operator,
           address _from,
-          uint256[] _types,
-          uint256[] _amounts,
-          bytes _data
+          uint256[] memory _types,
+          uint256[] memory _amounts,
+          bytes memory _data
           )
       public
       returns(bytes4);
