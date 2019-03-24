@@ -20,6 +20,8 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
 
     event BatchTransfer(address from, address to, uint256[] tokenTypes, uint256[] amounts);
 
+    constructor(string memory _baseTokenURI) public ERC721XTokenNFT(_baseTokenURI) {}
+
 
     modifier isOperatorOrOwner(address _from) {
         require((msg.sender == _from) || operators[_from][msg.sender], "msg.sender is neither _from nor operator");

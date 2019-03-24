@@ -6,6 +6,8 @@ import "./ERC721X/ERC721XToken.sol";
 
 contract Card is ERC721XToken {
 
+    constructor(string memory _baseTokenURI) public ERC721XToken(_baseTokenURI) {}
+
     function name() external view returns (string memory) {
         return "Card";
     }

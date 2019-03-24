@@ -27,9 +27,10 @@ contract ERC721XTokenNFT is ERC721 {
     uint256 constant NFT = 1;
     uint256 constant FT = 2;
 
+    string baseTokenURI;
 
-    constructor() public {
-        // _registerInterface(InterfaceId_ERC721Enumerable);
+    constructor(string memory _baseTokenURI) public {
+        baseTokenURI = _baseTokenURI;
         _registerInterface(InterfaceId_ERC721Metadata);
     }
 
@@ -181,23 +182,35 @@ contract ERC721XTokenNFT is ERC721 {
         emit Transfer(_from, _to, _tokenId);
     }
 
-    function tokenURI(uint256 _tokenId) public view returns (string memory tokenUri) {
+    function tokenURI(uint256 _tokenId) public view returns (string memory) {
         require(exists(_tokenId), "Token doesn't exist");
-        tokenUri = "https://rinkeby.loom.games/erc721/zmb/000000.json";
-
-        bytes memory _uriBytes = bytes(tokenUri);
-        _uriBytes[38] = toBytes(48+(_tokenId / 100000) % 10);
-        _uriBytes[39] = toBytes(48+(_tokenId / 10000) % 10);
-        _uriBytes[40] = toBytes(48+(_tokenId / 1000) % 10);
-        _uriBytes[41] = toBytes(48+(_tokenId / 100) % 10);
-        _uriBytes[42] = toBytes(48+(_tokenId / 10) % 10);
-        _uriBytes[43] = toBytes(48+(_tokenId / 1) % 10);
-
-        return string(_uriBytes);
+        return string(abi.encodePacked(
+            baseTokenURI, 
+            uint2str(_tokenId),
+            ".json"
+        ));
     }
 
-    function toBytes(uint256 x) private pure returns (byte b) {
-        assembly { mstore(add(b, 32), x) }
+   function uint2str(uint _i) private pure returns (string memory _uintAsString) {
+        if (_i == 0) {
+            return "0";
+        }
+
+        uint j = _i;
+        uint len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+
+        bytes memory bstr = new bytes(len);
+        uint k = len - 1;
+        while (_i != 0) {
+            bstr[k--] = byte(uint8(48 + _i % 10));
+            _i /= 10;
+        }
+
+        return string(bstr);
     }
 
     /**

@@ -19,6 +19,7 @@ const safeTransferFromNoDataNFT = async function(token, from, to, uid, opts) {
     return token.methods['safeTransferFrom(address,address,uint256)'](from, to, uid, opts)
 }
 
+const baseTokenURI = "https://rinkeby.loom.games/erc721/zmb/"
 
 Number.prototype.pad = function(size) {
     var s = String(this);
@@ -31,7 +32,7 @@ contract('Card', accounts => {
     const  [ alice, bob, carlos ] = accounts;
 
     beforeEach(async () => {
-        card = await Card.new()
+        card = await Card.new(baseTokenURI)
     });
 
     it('Should ZBGCard be deployed', async () => {
@@ -60,7 +61,7 @@ contract('Card', accounts => {
         for (let i = 0; i< 100; i++) {
             await card.mint(i, accounts[0], 2)
             const cardUri = await card.tokenURI.call(i)
-            assert.equal(cardUri, `https://rinkeby.loom.games/erc721/zmb/${i.pad(6)}.json`)
+            assert.equal(cardUri, `${baseTokenURI}${i}.json`)
         }
     })
 
@@ -68,7 +69,7 @@ contract('Card', accounts => {
         for (let i = 0; i< 100; i++) {
             await card.mint(i, accounts[0])
             const cardUri = await card.tokenURI.call(i)
-            assert.equal(cardUri, `https://rinkeby.loom.games/erc721/zmb/${i.pad(6)}.json`)
+            assert.equal(cardUri, `${baseTokenURI}${i}.json`)
         }
     })
 
@@ -76,7 +77,7 @@ contract('Card', accounts => {
         const uid = 987145
         await card.mint(uid, accounts[0])
         const cardUri = await card.tokenURI.call(uid)
-        assert.equal(cardUri, "https://rinkeby.loom.games/erc721/zmb/987145.json")
+        assert.equal(cardUri, `${baseTokenURI}${uid}.json`)
     })
 
     it('Should be able to mint a fungible token', async () => {
