@@ -29,8 +29,8 @@
     "eth-gas-reporter": "^0.1.10",
     "ethereumjs-util": "^5.2.0",
     "ganache-cli": "^6.1.8",
-    "openzeppelin-solidity": "^1.12.0",
-    "truffle": "^5.0.0-beta.0",
+    "openzeppelin-solidity": "^2.2.0",
+    "truffle": "^5.0.9",
     "truffle-hdwallet-provider": "https://github.com/loomnetwork/truffle-hdwallet-provider#web3-one",
     "web3-utils": "1.0.0-beta.34"
   },
