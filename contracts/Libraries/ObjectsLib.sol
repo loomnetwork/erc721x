@@ -1,7 +1,6 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.5.6;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-
 
 library ObjectLib {
 
@@ -44,9 +43,10 @@ library ObjectLib {
     uint256 _amount,
     Operations _operation) internal pure returns (uint256 newBinBalance)
   {
+    uint256 objectBalance;
     if (_operation == Operations.ADD) {
 
-        uint256 objectBalance = getValueInBin(_binBalances, _index);
+        objectBalance = getValueInBin(_binBalances, _index);
         newBinBalance = writeValueInBin(_binBalances, _index, objectBalance.add(_amount));
 
     } else if (_operation == Operations.SUB) {

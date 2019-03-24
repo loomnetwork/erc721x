@@ -1,19 +1,17 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.6;
 
-import "openzeppelin-solidity/contracts/introspection/SupportsInterfaceWithLookup.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
-import "openzeppelin-solidity/contracts/token/ERC721/ERC721Receiver.sol";
-import "openzeppelin-solidity/contracts/AddressUtils.sol";
-
+import "openzeppelin-solidity/contracts/token/ERC721/IERC721Receiver.sol";
+import "openzeppelin-solidity/contracts/utils/Address.sol";
 import "../../Libraries/ObjectsLib.sol";
 
 
 // Packed NFT that has storage which is batch transfer compatible
-contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
+contract ERC721XTokenNFT is ERC721 {
 
     using ObjectLib for ObjectLib.Operations;
     using ObjectLib for uint256;
-    using AddressUtils for address;
+    using Address for address;
 
     // bytes4 internal constant InterfaceId_ERC721Enumerable = 0x780e9d63;
     bytes4 internal constant ERC721_RECEIVED = 0x150b7a02;
@@ -29,17 +27,18 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
     uint256 constant NFT = 1;
     uint256 constant FT = 2;
 
+    string baseTokenURI;
 
-    constructor() public {
-        // _registerInterface(InterfaceId_ERC721Enumerable);
+    constructor(string memory _baseTokenURI) public {
+        baseTokenURI = _baseTokenURI;
         _registerInterface(InterfaceId_ERC721Metadata);
     }
 
-    function name() external view returns (string) {
+    function name() external view returns (string memory) {
         return "ERC721XTokenNFT";
     }
 
-    function symbol() external view returns (string) {
+    function symbol() external view returns (string memory) {
         return "ERC721X";
     }
 
@@ -92,7 +91,7 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
      * @return indexes The tokenIds
      * @return balances The balances of each token
      */
-    function tokensOwned(address _owner) public view returns (uint256[] indexes, uint256[] balances) {
+    function tokensOwned(address _owner) public view returns (uint256[] memory indexes, uint256[] memory balances) {
         uint256 numTokens = totalSupply();
         uint256[] memory tokenIndexes = new uint256[](numTokens);
         uint256[] memory tempTokens = new uint256[](numTokens);
@@ -111,7 +110,7 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
         uint256[] memory _ownedTokens = new uint256[](count);
         uint256[] memory _ownedTokensIndexes = new uint256[](count);
 
-        for (i = 0; i < count; i++) {
+        for (uint256 i = 0; i < count; i++) {
             _ownedTokens[i] = tempTokens[i];
             _ownedTokensIndexes[i] = tokenIndexes[i];
         }
@@ -154,7 +153,7 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
         address _from,
         address _to,
         uint256 _tokenId,
-        bytes _data
+        bytes memory _data
     )
         public
     {
@@ -183,19 +182,35 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
         emit Transfer(_from, _to, _tokenId);
     }
 
-    function tokenURI(uint256 _tokenId) public view returns (string tokenUri) {
+    function tokenURI(uint256 _tokenId) public view returns (string memory) {
         require(exists(_tokenId), "Token doesn't exist");
-        tokenUri = "https://rinkeby.loom.games/erc721/zmb/000000.json";
+        return string(abi.encodePacked(
+            baseTokenURI, 
+            uint2str(_tokenId),
+            ".json"
+        ));
+    }
 
-        bytes memory _uriBytes = bytes(tokenUri);
-        _uriBytes[38] = byte(48+(_tokenId / 100000) % 10);
-        _uriBytes[39] = byte(48+(_tokenId / 10000) % 10);
-        _uriBytes[40] = byte(48+(_tokenId / 1000) % 10);
-        _uriBytes[41] = byte(48+(_tokenId / 100) % 10);
-        _uriBytes[42] = byte(48+(_tokenId / 10) % 10);
-        _uriBytes[43] = byte(48+(_tokenId / 1) % 10);
+   function uint2str(uint _i) private pure returns (string memory _uintAsString) {
+        if (_i == 0) {
+            return "0";
+        }
 
-        return tokenUri;
+        uint j = _i;
+        uint len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+
+        bytes memory bstr = new bytes(len);
+        uint k = len - 1;
+        while (_i != 0) {
+            bstr[k--] = byte(uint8(48 + _i % 10));
+            _i /= 10;
+        }
+
+        return string(bstr);
     }
 
     /**
@@ -211,7 +226,7 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
         address _from,
         address _to,
         uint256 _tokenId,
-        bytes _data
+        bytes memory _data
     )
         internal
         returns (bool)
@@ -219,7 +234,7 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
         if (!_to.isContract()) {
             return true;
         }
-        bytes4 retval = ERC721Receiver(_to).onERC721Received(
+        bytes4 retval = IERC721Receiver(_to).onERC721Received(
             msg.sender, _from, _tokenId, _data
         );
         return (retval == ERC721_RECEIVED);
@@ -310,5 +325,5 @@ contract ERC721XTokenNFT is ERC721, SupportsInterfaceWithLookup {
     }
 
     // FOR COMPATIBILITY WITH ERC721 Standard, UNUSED.
-    function tokenOfOwnerByIndex(address _owner, uint256 _index) public view returns (uint256 _tokenId) {_owner; _index; return 0;}
+    function tokenOfOwnerByIndex(address _owner, uint256 _index) public pure returns (uint256 _tokenId) {_owner; _index; return 0;}
 }

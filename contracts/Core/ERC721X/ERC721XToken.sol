@@ -1,11 +1,11 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.5.6;
 
 import "./../../Interfaces/ERC721X.sol";
 
 import "./../../Interfaces/ERC721XReceiver.sol";
 import "./ERC721XTokenNFT.sol";
 
-import "openzeppelin-solidity/contracts/AddressUtils.sol";
+import "openzeppelin-solidity/contracts/utils/Address.sol";
 import "./../../Libraries/ObjectsLib.sol";
 
 
@@ -13,12 +13,14 @@ import "./../../Libraries/ObjectsLib.sol";
 contract ERC721XToken is ERC721X, ERC721XTokenNFT {
 
     using ObjectLib for ObjectLib.Operations;
-    using AddressUtils for address;
+    using Address for address;
 
     bytes4 internal constant ERC721X_RECEIVED = 0x660b3370;
     bytes4 internal constant ERC721X_BATCH_RECEIVE_SIG = 0xe9e5be6a;
 
     event BatchTransfer(address from, address to, uint256[] tokenTypes, uint256[] amounts);
+
+    constructor(string memory _baseTokenURI) public ERC721XTokenNFT(_baseTokenURI) {}
 
 
     modifier isOperatorOrOwner(address _from) {
@@ -38,7 +40,7 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
      * @param _amounts Array of amount of object per type to be transferred.
      * Note:  Arrays should be sorted so that all tokenIds in a same bin are adjacent (more efficient).
      */
-    function _batchTransferFrom(address _from, address _to, uint256[] _tokenIds, uint256[] _amounts)
+    function _batchTransferFrom(address _from, address _to, uint256[] memory _tokenIds, uint256[] memory _amounts)
         internal
         isOperatorOrOwner(_from)
     {
@@ -105,7 +107,7 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
         emit BatchTransfer(_from, _to, _tokenIds, _amounts);
     }
 
-    function batchTransferFrom(address _from, address _to, uint256[] _tokenIds, uint256[] _amounts) public {
+    function batchTransferFrom(address _from, address _to, uint256[] memory _tokenIds, uint256[] memory _amounts) public {
         // Batch Transfering
         _batchTransferFrom(_from, _to, _tokenIds, _amounts);
     }
@@ -122,9 +124,9 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
     function safeBatchTransferFrom(
         address _from,
         address _to,
-        uint256[] _tokenIds,
-        uint256[] _amounts,
-        bytes _data
+        uint256[] memory _tokenIds,
+        uint256[] memory _amounts,
+        bytes memory _data
     )
         public
     {
@@ -166,7 +168,7 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
         safeTransferFrom(_from, _to, _tokenId, _amount, "");
     }
 
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, uint256 _amount, bytes _data) public {
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, uint256 _amount, bytes memory _data) public {
         _transferFrom(_from, _to, _tokenId, _amount);
         require(
             checkAndCallSafeTransfer(_from, _to, _tokenId, _amount, _data),
@@ -194,7 +196,7 @@ contract ERC721XToken is ERC721X, ERC721XTokenNFT {
         address _to,
         uint256 _tokenId,
         uint256 _amount,
-        bytes _data
+        bytes memory _data
     )
         internal
         returns (bool)
