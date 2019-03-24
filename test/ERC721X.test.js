@@ -1,4 +1,3 @@
-const { soliditySha3 } = require('web3-utils')
 const { assertEventVar,
     expectThrow,
 } = require('./helpers')
@@ -11,6 +10,15 @@ require('chai')
     .should()
 
 const Card = artifacts.require('Card')
+
+const safeTransferFromNoDataFT = async function(token, from, to, uid, amount, opts) {
+    return token.methods['safeTransferFrom(address,address,uint256,uint256)'](from, to, uid, amount, opts)
+}
+
+const safeTransferFromNoDataNFT = async function(token, from, to, uid, opts) {
+    return token.methods['safeTransferFrom(address,address,uint256)'](from, to, uid, opts)
+}
+
 
 Number.prototype.pad = function(size) {
     var s = String(this);
@@ -163,19 +171,14 @@ contract('Card', accounts => {
         const balanceOf2 = await card.balanceOf.call(alice)
         balanceOf2.should.be.eq.BN(new BN(1))
 
-        const tx2 = await card.safeTransferFrom(
-            alice,
-            bob,
-            uid,
-            { from: alice }
-        )
+        const tx2 = await safeTransferFromNoDataNFT(card, alice, bob, uid, {from: alice})
 
         const ownerOf2 = await card.ownerOf(uid);
         assert.equal(ownerOf2, bob)
 
-        assertEventVar(tx2, 'Transfer', '_from', alice)
-        assertEventVar(tx2, 'Transfer', '_to', bob)
-        assertEventVar(tx2, 'Transfer', '_tokenId', uid)
+        assertEventVar(tx2, 'Transfer', 'from', alice)
+        assertEventVar(tx2, 'Transfer', 'to', bob)
+        assertEventVar(tx2, 'Transfer', 'tokenId', uid)
 
         const balanceOf3 = await card.balanceOf.call(bob)
         balanceOf3.should.be.eq.BN(new BN(1))
@@ -192,7 +195,7 @@ contract('Card', accounts => {
         const bobCardsBefore = await card.balanceOf(bob)
         assert.equal(bobCardsBefore, 0)
 
-        const tx = await card.safeTransferFrom(alice, bob, uid, amount, "0xabcd", {from: alice})
+        const tx = await safeTransferFromNoDataFT(card, alice, bob, uid, amount, {from: alice})
 
         assertEventVar(tx, 'TransferWithQuantity', 'from', alice)
         assertEventVar(tx, 'TransferWithQuantity', 'to', bob)
@@ -211,11 +214,11 @@ contract('Card', accounts => {
         await card.mint(uid, alice, amount)
         let tx = await card.setApprovalForAll(bob, true, {from: alice})
 
-        assertEventVar(tx, 'ApprovalForAll', '_owner', alice)
-        assertEventVar(tx, 'ApprovalForAll', '_operator', bob)
-        assertEventVar(tx, 'ApprovalForAll', '_approved', true)
+        assertEventVar(tx, 'ApprovalForAll', 'owner', alice)
+        assertEventVar(tx, 'ApprovalForAll', 'operator', bob)
+        assertEventVar(tx, 'ApprovalForAll', 'approved', true)
 
-        tx = await card.safeTransferFrom(alice, bob, uid, amount, "0xabcd", {from: bob})
+        tx = await safeTransferFromNoDataFT(card, alice, bob, uid, amount, {from: bob})
 
         assertEventVar(tx, 'TransferWithQuantity', 'from', alice)
         assertEventVar(tx, 'TransferWithQuantity', 'to', bob)
@@ -228,11 +231,11 @@ contract('Card', accounts => {
         const amount = 5
         let tx = await card.setApprovalForAll(bob, true, {from: alice})
 
-        assertEventVar(tx, 'ApprovalForAll', '_owner', alice)
-        assertEventVar(tx, 'ApprovalForAll', '_operator', bob)
-        assertEventVar(tx, 'ApprovalForAll', '_approved', true)
+        assertEventVar(tx, 'ApprovalForAll', 'owner', alice)
+        assertEventVar(tx, 'ApprovalForAll', 'operator', bob)
+        assertEventVar(tx, 'ApprovalForAll', 'approved', true)
 
-        await expectThrow(card.safeTransferFrom(alice, bob, uid, amount, "0xabcd", {from: carlos}))
+        await expectThrow(safeTransferFromNoDataFT(card, alice, bob, uid, amount, {from: carlos}))
     })
 
     it('Should get the correct number of coins owned by a user', async () => {
@@ -274,7 +277,7 @@ contract('Card', accounts => {
 
     it('Should fail to mint quantity of coins larger than packed bin can represent', async () => {
         // each bin can only store numbers < 2^16
-        await expectThrow(card.mint(alice, 0, 150000));
+        await expectThrow(card.mint(0, alice, 150000));
     })
 
     it('Should update balances of sender and receiver and ownerOf for NFTs', async () => {
